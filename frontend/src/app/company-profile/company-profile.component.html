@@ -1,0 +1,723 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 d-flex align-items-center me-auto">
+      <div class="item m-3">
+        <a routerLink="/company-info"
+          ><img
+            src="../../assets/full-shot-travel.avif"
+            class="rounded-circle opacity"
+            style="width: 50px; height: 50px"
+            alt=""
+          />
+        </a>
+      </div>
+      <a routerLink="/company-info" class="h4 link-light opacity">My Profile</a>
+    </div>
+    <div class="col-md-4 m-auto">
+      <form class="input-group" (change)="search($event)">
+        <input class="form-control mr-sm-2" type="text" placeholder="search" />
+        <button class="btn btn-outline-info" type="submit">
+          <i class="fa-solid fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5 text-center">
+  <div class="row">
+    <div class="col-md-12">
+      <a
+        class="btn btn-light float-end"
+        data-bs-toggle="modal"
+        data-bs-target="#AddTripModal"
+      >
+        <i class="fa-solid fa-add"></i> Add Trip
+      </a>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div *ngFor="let trip of allTrips" class="col-md-4 mt-5">
+      <div class="card text-center" style="height: auto">
+        <div class="card-header" style="height: 60vh">
+          <owl-carousel-o [options]="customOptions">
+            <ng-container *ngFor="let image of trip.photo">
+              <ng-template carouselSlide>
+                <img [src]="image" style="height: 40vh" />
+              </ng-template>
+            </ng-container>
+          </owl-carousel-o>
+          <h4 class="card-title text-dark p-2">{{ trip.title }}</h4>
+        </div>
+        <div class="card-body" let index="index">
+          <p
+            class="card-text text-dark"
+            style="max-height: 20vh; overflow: auto; height: 20vh"
+          >
+            {{ trip.desc }}
+          </p>
+          <button
+            class="btn btn-outline-info btn-sm mx-2"
+            data-bs-toggle="modal"
+            data-bs-target="#viewCart"
+            (click)="show(trip)"
+          >
+            Update
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm mx-2"
+            (click)="deleteTrip(trip._id)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal -->
+<div
+  class="modal fade"
+  data-bs-backdrop="static"
+  id="AddTripModal"
+  tabindex="-1"
+  aria-labelledby="AddTripModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <p class="modal-title h2" id="AddTripModalLabel">Add New Trip</p>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-black">
+        <div *ngIf="triperr" class="alert alert-danger">{{ triperr }}</div>
+        <div class="container-fluid">
+          <form [formGroup]="addTripForm" (ngSubmit)="addTrip(addTripForm)">
+            <div class="row">
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="title">Title</label>
+                <input
+                  id="title"
+                  type="text"
+                  class="form-control"
+                  formControlName="title"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['title'].invalid &&
+                    addTripForm.controls['title'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['title'].hasError('required')"
+                    >Title is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="city">City</label>
+                <input
+                  id="city"
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['city'].invalid &&
+                    addTripForm.controls['city'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['city'].hasError('required')"
+                    >City is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <label class="mt-2">Stops</label>
+                <br />
+                <input
+                  type="button"
+                  class="btn btn-outline-info"
+                  value="Add Stop"
+                  (click)="addStop()"
+                />
+              </div>
+              <div formArrayName="stops" class="row">
+                <div
+                  class="row d-flex align-items-center"
+                  *ngFor="let stop of stops().controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="col-md-5">
+                    Stop Title :
+                    <input
+                      type="text"
+                      formControlName="Stoptitle"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-5">
+                    Duration:
+                    <input
+                      type="text"
+                      formControlName="duration"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-2 mt-2">
+                    <p></p>
+                    <button (click)="removeStop(i)" class="btn btn-danger">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="address">Address</label>
+                <input
+                  id="address"
+                  type="text"
+                  class="form-control"
+                  formControlName="address"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['address'].invalid &&
+                    addTripForm.controls['address'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['address'].hasError('required')"
+                    >Address is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="price">Price</label>
+                <input
+                  id="price"
+                  type="number"
+                  class="form-control"
+                  formControlName="price"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['price'].invalid &&
+                    addTripForm.controls['price'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['price'].hasError('required')"
+                    >Price is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="distance">Distance</label>
+                <input
+                  id="distance"
+                  type="number"
+                  class="form-control"
+                  formControlName="distance"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['distance'].invalid &&
+                    addTripForm.controls['distance'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      addTripForm.controls['distance'].hasError('required')
+                    "
+                    >Distance is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="maxGroupSize">Maximum Group Size</label>
+                <input
+                  id="maxGroupSize"
+                  type="number"
+                  class="form-control"
+                  formControlName="maxGroupSize"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['maxGroupSize'].invalid &&
+                    addTripForm.controls['maxGroupSize'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      addTripForm.controls['maxGroupSize'].hasError('required')
+                    "
+                    >Max Group Size is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="startDate">Start Date</label>
+                <input
+                  id="startDate"
+                  type="text"
+                  class="form-control"
+                  formControlName="startDate"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['startDate'].invalid &&
+                    addTripForm.controls['startDate'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      addTripForm.controls['startDate'].hasError('required')
+                    "
+                    >Start Date is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="endDate">End Date</label>
+                <input
+                  id="endDate"
+                  type="text"
+                  class="form-control"
+                  formControlName="endDate"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['endDate'].invalid &&
+                    addTripForm.controls['endDate'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['endDate'].hasError('required')"
+                    >End Date is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-12 my-2">
+                <label for="image">Image</label>
+                <img src="" />
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  class="form-control"
+                  (change)="onPickImage($event)"
+                  FormControlName="photo"
+                  multiple
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['photo'].invalid &&
+                    addTripForm.controls['photo'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['photo'].hasError('required')"
+                    >Photo is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col col-sm-12 my-2">
+                <label for="Description">Description</label>
+                <textarea
+                  class="form-control"
+                  placeholder="Type here..."
+                  formControlName="desc"
+                ></textarea>
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    addTripForm.controls['desc'].invalid &&
+                    addTripForm.controls['desc'].touched
+                  "
+                >
+                  <span
+                    *ngIf="addTripForm.controls['desc'].hasError('required')"
+                    >Description is Required</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mb-3 mb-lg-4">
+              <button
+                [disabled]="addTripForm.invalid"
+                data-bs-dismiss="modal"
+                type="submit"
+                class="btn btn-outline-info btn-lg w-25"
+              >
+                <span>Add</span>
+                <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  data-bs-backdrop="static"
+  id="viewCart"
+  tabindex="-1"
+  aria-labelledby="viewCartLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <p class="modal-title h2" id="viewCartLabel">Edit Trip</p>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-black">
+        <!-- <div *ngIf="triperr" class="alert alert-danger">{{ triperr }}</div> -->
+        <div class="container-fluid">
+          <form [formGroup]="editTripForm" (ngSubmit)="editTrip(editTripForm)">
+            <div class="row">
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="title">Title</label>
+                <input
+                  id="title"
+                  type="text"
+                  class="form-control"
+                  formControlName="title"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['title'].invalid &&
+                    editTripForm.controls['title'].touched
+                  "
+                >
+                  <span
+                    *ngIf="editTripForm.controls['title'].hasError('required')"
+                    >Title is Required</span
+                  >
+                </div>
+              </div>
+
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="city">City</label>
+                <input
+                  id="city"
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['city'].invalid &&
+                    editTripForm.controls['city'].touched
+                  "
+                >
+                  <span
+                    *ngIf="editTripForm.controls['city'].hasError('required')"
+                    >City is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12">
+                <label class="mt-2">Stops</label>
+                <br />
+                <input
+                  type="button"
+                  class="btn btn-outline-info"
+                  value="Add Stop"
+                  (click)="addnewStop()"
+                />
+              </div>
+              <div formArrayName="newstops" class="row">
+                <div
+                  class="row d-flex align-items-center"
+                  *ngFor="let stop of newstops().controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="col-md-5">
+                    Stop Title :
+                    <input
+                      type="text"
+                      formControlName="Stoptitle"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-5">
+                    Duration:
+                    <input
+                      type="text"
+                      formControlName="duration"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="col-md-2 mt-2">
+                    <p></p>
+                    <button (click)="removenewStop(i)" class="btn btn-danger">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="address">Address</label>
+                <input
+                  id="address"
+                  type="text"
+                  class="form-control"
+                  formControlName="address"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['address'].invalid &&
+                    editTripForm.controls['address'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      editTripForm.controls['address'].hasError('required')
+                    "
+                    >Address is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="price">Price</label>
+                <input
+                  id="price"
+                  type="number"
+                  class="form-control"
+                  formControlName="price"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['price'].invalid &&
+                    editTripForm.controls['price'].touched
+                  "
+                >
+                  <span
+                    *ngIf="editTripForm.controls['price'].hasError('required')"
+                    >Price is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="distance">Distance</label>
+                <input
+                  id="distance"
+                  type="number"
+                  class="form-control"
+                  formControlName="distance"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['distance'].invalid &&
+                    editTripForm.controls['distance'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      editTripForm.controls['distance'].hasError('required')
+                    "
+                    >Distance is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="maxGroupSize">Maximum Group Size</label>
+                <input
+                  id="maxGroupSize"
+                  type="number"
+                  class="form-control"
+                  formControlName="maxGroupSize"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['maxGroupSize'].invalid &&
+                    editTripForm.controls['maxGroupSize'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      editTripForm.controls['maxGroupSize'].hasError('required')
+                    "
+                    >Max Group Size is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="startDate">Start Date</label>
+                <input
+                  id="startDate"
+                  type="text"
+                  class="form-control"
+                  formControlName="startDate"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['startDate'].invalid &&
+                    editTripForm.controls['startDate'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      editTripForm.controls['startDate'].hasError('required')
+                    "
+                    >Start Date is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-12 my-2">
+                <label for="endDate">End Date</label>
+                <input
+                  id="endDate"
+                  type="text"
+                  class="form-control"
+                  formControlName="endDate"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['endDate'].invalid &&
+                    editTripForm.controls['endDate'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      editTripForm.controls['endDate'].hasError('required')
+                    "
+                    >End Date is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col-12 my-2">
+                <label for="image">Image</label>
+                <img src="" />
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  class="form-control"
+                  (change)="onPickEditImage($event)"
+                  FormControlName="photo"
+                  multiple
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['photo'].invalid &&
+                    editTripForm.controls['photo'].touched
+                  "
+                >
+                  <span
+                    *ngIf="editTripForm.controls['photo'].hasError('required')"
+                    >Photo is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col col-sm-12 my-2">
+                <label for="Description">Description</label>
+                <textarea
+                  class="form-control"
+                  placeholder="Type here..."
+                  formControlName="desc"
+                ></textarea>
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    editTripForm.controls['desc'].invalid &&
+                    editTripForm.controls['desc'].touched
+                  "
+                >
+                  <span
+                    *ngIf="editTripForm.controls['desc'].hasError('required')"
+                    >Description is Required</span
+                  >
+                </div>
+              </div>
+              <div class="col col-sm-12 my-2" *ngIf="!emptystops">
+                <label for="Stops">Stops</label>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Stop Title</th>
+                      <th scope="col">Duration</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let stop of allstops; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ stop.stoptitle }}</td>
+                      <td>{{ stop.duration }}</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td class="">
+                        <button
+                          class="btn btn-danger"
+                          id="removestops"
+                          (click)="removeStops()"
+                        >
+                          Delete All Stops
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="text-center mb-3 mb-lg-4">
+              <button
+                [disabled]="editTripForm.invalid"
+                data-bs-dismiss="modal"
+                type="submit"
+                class="btn btn-outline-info btn-lg w-25"
+              >
+                <span>update</span>
+                <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

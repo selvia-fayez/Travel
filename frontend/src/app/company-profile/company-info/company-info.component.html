@@ -1,0 +1,201 @@
+<div class="container py-5 text-black mt-5">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="../../assets/detailed-travel-logo_.avif"
+            alt="avatar"
+            class="rounded-circle img-fluid"
+            style="width: 150px"
+          />
+          <p class="my-3">{{ companyInfo.Company_name }}</p>
+          <p class="text-muted mb-1">Travel Agency</p>
+          <p class="text-muted mb-4">{{ companyInfo.Address }}, Egypt</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Company Name</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ companyInfo.Company_name }}</p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Email</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ companyInfo.Email }}</p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Phone</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ companyInfo.Phone }}</p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Address</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ companyInfo.Address }}, Egypt</p>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">CRN</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ companyInfo.CRN }}</p>
+            </div>
+          </div>
+          <hr />
+          <div class="row d-flex align-items-center">
+            <div class="col-sm-3">
+              <p class="mb-0">My Package</p>
+            </div>
+            <div class="col-sm-9">
+              <div class="d-flex align-items-center">
+                <p class="text-muted mb-0">{{ companyInfo.packageType }}</p>
+                <a
+                  class="btn btn-success ms-5"
+                  data-bs-toggle="modal"
+                  data-bs-target="#fav"
+                >
+                  Change
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container text-black mt-2">
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-10 col-xl-8 text-center">
+      <p class="mb-4 h3 text-white fw-bold">Clients Reviews</p>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col-md-4 mb-5 my-3" *ngFor="let review of allReviews">
+      <div class="bg-light p-3 card">
+        <div class="d-flex justify-content-center mb-4">
+          <img
+            src="../../../assets/user_318-174218.avif"
+            class="rounded-circle shadow-1-strong"
+            width="150"
+            height="150"
+          />
+        </div>
+        <p class="mb-3 h5">{{ review.createdBy.User_name }}</p>
+        <p class="text-warning mb-3 h5">{{ review.title }}</p>
+        <p class="px-xl-3 text-muted" style="max-height: 20vh; height: 20vh">
+          <i class="fas fa-quote-left pe-2"></i>{{ review.reviewText }}
+        </p>
+        <div class="evaluation d-flex justify-content-center">
+          <div
+            *ngFor="let item of [].constructor(review.rating)"
+            class="star mt-1"
+          >
+            <i class="fa-solid fa-star text-warning"></i>
+          </div>
+        </div>
+        <!-- <p class="h5">Rating: {{ review.rating }}</p> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="fav"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="favLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-black">
+        <section id="pay">
+          <div class="pay">
+            <p class="text-center py-1 h3">Choose the length of your plan</p>
+            <div class="payCards d-flex justify-content-around">
+              <mat-radio-group
+                aria-label="Select an option"
+                (change)="onChangeRadio($event)"
+              >
+                <div
+                  class="card m-3"
+                  style="width: 18rem; background: rgba(0, 0, 0, 0.342)"
+                >
+                  <div class="card-body">
+                    <mat-radio-button value="1-year subscription">
+                      <p class="card-title h6">1-year subscription</p>
+                      <div class="payDetails">
+                        <p class="card-text">Billed as $35.88 / 1 year.</p>
+                        <span>$2.99 /month</span>
+                      </div>
+                    </mat-radio-button>
+                  </div>
+                </div>
+                <div
+                  class="card m-3"
+                  style="width: 18rem; background: rgba(0, 0, 0, 0.342)"
+                >
+                  <div class="card-body">
+                    <mat-radio-button value="2-year subscription">
+                      <p class="card-title h6">2-year subscription</p>
+                      <div class="payDetails">
+                        <p class="card-text">Billed as $69.36 / 2 years.</p>
+                        <span>$2.89 /month</span>
+                      </div>
+                    </mat-radio-button>
+                  </div>
+                </div>
+              </mat-radio-group>
+            </div>
+            <div>
+              <p class="h6">Your Package is: {{ CompanyPackage }}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="makePayment()"
+        >
+          Subscribe
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

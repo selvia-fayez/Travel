@@ -1,0 +1,486 @@
+<div class="container w-75 mt-5">
+  <p class="text-center h1 fw-bold mx-1 mx-md-4 mt-4">Sign up</p>
+  <mat-tab-group mat-align-tab="center">
+    <mat-tab label="User">
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </head>
+        <body>
+          <div *ngIf="usererr" class="alert alert-danger">{{ usererr }}</div>
+          <form
+            class="form-outline my-4"
+            [formGroup]="UserRegisterForm"
+            (ngSubmit)="addUser(UserRegisterForm)"
+          >
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="username">User Name</label>
+                <input
+                  type="text"
+                  id="username"
+                  class="form-control"
+                  formControlName="User_name"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    UserRegisterForm.controls['User_name'].invalid &&
+                    UserRegisterForm.controls['User_name'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['User_name'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Username is Required
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="email">Your email</label>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  formControlName="Email"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    UserRegisterForm.controls['Email'].invalid &&
+                    UserRegisterForm.controls['Email'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Email'].hasError('required')
+                    "
+                  >
+                    Your Email is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Email'].hasError('pattern')
+                    "
+                  >
+                    Email must match pattern like : "example1@domain.com"
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="phone">Phone</label>
+                <input
+                  type="text"
+                  id="phone"
+                  class="form-control"
+                  formControlName="Phone"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    UserRegisterForm.controls['Phone'].invalid &&
+                    UserRegisterForm.controls['Phone'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Phone'].hasError('required')
+                    "
+                  >
+                    Your Phone is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Phone'].hasError('pattern')
+                    "
+                  >
+                    Phone must match pattern like : "01022222154"
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  formControlName="Password"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    UserRegisterForm.controls['Password'].invalid &&
+                    UserRegisterForm.controls['Password'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Password'].hasError('required')
+                    "
+                  >
+                    Password is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Password'].hasError(
+                        'minlength'
+                      )
+                    "
+                  >
+                    Password must have atleast 8 charcters
+                  </span>
+                  <span
+                    *ngIf="
+                      UserRegisterForm.controls['Password'].hasError('pattern')
+                    "
+                    >Password must have at least one lowercase , one uppercase ,
+                    at least one digit and special character [ example :
+                    Ahmed@123 ]</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mb-3 mb-lg-4">
+              <button
+                [disabled]="UserRegisterForm.invalid"
+                type="submit"
+                class="btn btn-outline-info btn-lg w-25"
+              >
+                <span>Register</span>
+                <i *ngIf="userisLoading" class="fas fa-spinner fa-spin"></i>
+              </button>
+            </div>
+          </form>
+        </body>
+      </html>
+    </mat-tab>
+    <mat-tab label="Company">
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+        </head>
+        <body>
+          <div *ngIf="companyerr" class="alert alert-danger">
+            {{ companyerr }}
+          </div>
+          <form
+            class="form-outline my-4"
+            [formGroup]="CompanyRegisterForm"
+            (ngSubmit)="addCompany(CompanyRegisterForm)"
+          >
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="companyname">Company Name</label>
+                <input
+                  type="text"
+                  id="companyname"
+                  class="form-control"
+                  formControlName="Company_name"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['Company_name'].invalid &&
+                    CompanyRegisterForm.controls['Company_name'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Company_name'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Company name is Required
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="comemail">Company email</label>
+                <input
+                  type="email"
+                  id="comemail"
+                  class="form-control"
+                  formControlName="Email"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['Email'].invalid &&
+                    CompanyRegisterForm.controls['Email'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Email'].hasError('required')
+                    "
+                  >
+                    Company Email is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Email'].hasError('pattern')
+                    "
+                  >
+                    Email must match pattern like : "example1@domain.com"
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="comphone">Phone</label>
+                <input
+                  type="text"
+                  id="comphone"
+                  class="form-control"
+                  formControlName="Phone"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['Phone'].invalid &&
+                    CompanyRegisterForm.controls['Phone'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Phone'].hasError('required')
+                    "
+                  >
+                    Your Phone is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Phone'].hasError('pattern')
+                    "
+                  >
+                    Phone must match pattern like : "01022222154"
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="companyAddress"
+                  >Company Address</label
+                >
+                <input
+                  type="text"
+                  id="companyAddress"
+                  class="form-control"
+                  formControlName="Address"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['Address'].invalid &&
+                    CompanyRegisterForm.controls['Address'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Address'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Company Address is Required
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="CRN"
+                  >Commercial Registration Number</label
+                >
+                <input
+                  type="text"
+                  id="CRN"
+                  class="form-control"
+                  formControlName="CRN"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['CRN'].invalid &&
+                    CompanyRegisterForm.controls['CRN'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['CRN'].hasError('required')
+                    "
+                  >
+                    Commercial Registration Number is Required
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-row align-items-center mb-4">
+              <div class="form-outline flex-fill mb-0">
+                <label class="form-label" for="compassword">Password</label>
+                <input
+                  type="password"
+                  id="compassword"
+                  class="form-control"
+                  formControlName="Password"
+                />
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    CompanyRegisterForm.controls['Password'].invalid &&
+                    CompanyRegisterForm.controls['Password'].touched
+                  "
+                >
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Password'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Password is Required
+                  </span>
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Password'].hasError(
+                        'minlength'
+                      )
+                    "
+                  >
+                    Password must have at least 8 charcters
+                  </span>
+                  <span
+                    *ngIf="
+                      CompanyRegisterForm.controls['Password'].hasError(
+                        'pattern'
+                      )
+                    "
+                  >
+                    Password must have at least one lowercase , one uppercase ,
+                    at least one digit and special character [ example :
+                    Company@1234 ]</span
+                  >
+                </div>
+              </div>
+            </div>
+            <section id="pay">
+              <div class="pay py-5">
+                <p class="mb-4 text-center py-2 h3">
+                  Now please choose the length of your plan
+                </p>
+                <div class="payCards d-flex justify-content-around">
+                  <mat-radio-group
+                    aria-label="Select an option"
+                    class="d-flex"
+                    (change)="onChangeRadio($event)"
+                  >
+                    <div
+                      class="card mx-3"
+                      style="
+                        width: 18rem;
+                        background: rgba(134, 134, 134, 0.342);
+                      "
+                    >
+                      <div class="card-body">
+                        <mat-radio-button
+                          value="Free subscription"
+                          class="text-black"
+                        >
+                          <p class="card-title h6">Free subscription</p>
+                          <div class="payDetails">
+                            <p class="card-text">
+                              You can add 3 tours For Free.
+                            </p>
+                          </div>
+                        </mat-radio-button>
+                      </div>
+                    </div>
+                    <div
+                      class="card mx-3"
+                      style="
+                        width: 18rem;
+                        background: rgba(134, 134, 134, 0.342);
+                      "
+                    >
+                      <div class="card-body">
+                        <mat-radio-button value="1-year subscription">
+                          <p class="card-title h6">1-year subscription</p>
+                          <div class="payDetails">
+                            <p class="card-text">Billed as $35.88 / 1 year.</p>
+                            <span>$2.99 /month</span>
+                          </div>
+                        </mat-radio-button>
+                      </div>
+                    </div>
+                    <div
+                      class="card mx-3"
+                      style="
+                        width: 18rem;
+                        background: rgba(134, 134, 134, 0.342);
+                      "
+                    >
+                      <div class="card-body">
+                        <mat-radio-button value="2-year subscription">
+                          <p class="card-title h6">2-year subscription</p>
+                          <div class="payDetails">
+                            <p class="card-text">Billed as $69.36 / 2 years.</p>
+                            <span>$2.89 /month</span>
+                          </div>
+                        </mat-radio-button>
+                      </div>
+                    </div>
+                  </mat-radio-group>
+                </div>
+                <div>Your Package is: {{ CompanyPackage }}</div>
+              </div>
+            </section>
+
+            <div class="text-center mb-3 mb-lg-4">
+              <button
+                [disabled]="CompanyRegisterForm.invalid"
+                type="submit"
+                class="btn btn-outline-info btn-lg w-25"
+              >
+                <span>Register</span>
+                <i *ngIf="companyisLoading" class="fas fa-spinner fa-spin"></i>
+              </button>
+            </div>
+          </form>
+        </body>
+      </html>
+    </mat-tab>
+  </mat-tab-group>
+</div>
